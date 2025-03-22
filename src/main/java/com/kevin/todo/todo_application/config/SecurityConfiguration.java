@@ -41,7 +41,7 @@ public class SecurityConfiguration {
                                 .hasAnyAuthority("ADMIN")
                                 .requestMatchers("/api/**")
                                 .hasAnyAuthority("USER")
-                                .requestMatchers("/superuser/**")
+                                .requestMatchers("/adminuser/**")
                                 .hasAnyAuthority("ADMIN", "USER")
                                 .anyRequest()
                                 .authenticated())
@@ -72,8 +72,5 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-    @Bean
-
 
 }

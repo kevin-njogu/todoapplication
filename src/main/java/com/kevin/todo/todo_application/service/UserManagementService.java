@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserManagementService {
@@ -116,49 +117,48 @@ public class UserManagementService {
     }
 
 
-    public ReqRes getUsersById(Integer id) {
-        ReqRes reqRes = new ReqRes();
+    public UserRequestResponse  getUsersById(Integer id) {
+        UserRequestResponse response = new UserRequestResponse();
         try {
-            OurUsers usersById = usersRepo.findById(id).orElseThrow(() -> new RuntimeException("User Not found"));
-            reqRes.setOurUsers(usersById);
-            reqRes.setStatusCode(200);
-            reqRes.setMessage("Users with id '" + id + "' found successfully");
+            OurUser user = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User Not found"));
+            response.setOurUser(user);
+            response.setStatusCode(200);
+            response.setMessage("Users with id '" + id + "' found successfully");
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred: " + e.getMessage());
+            response.setStatusCode(500);
+            response.setMessage("Error occurred: " + e.getMessage());
         }
-        return reqRes;
+        return response;
     }
 
 
-    public ReqRes deleteUser(Integer userId) {
-        ReqRes reqRes = new ReqRes();
+    public UserRequestResponse deleteUser(Integer userId) {
+        UserRequestResponse response = new UserRequestResponse();
         try {
-            Optional<OurUsers> userOptional = usersRepo.findById(userId);
+            Optional<OurUser> userOptional = usersRepository.findById(userId);
             if (userOptional.isPresent()) {
-                usersRepo.deleteById(userId);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("User deleted successfully");
+                usersRepository.deleteById(userId);
+                response.setStatusCode(200);
+                response.setMessage("User deleted successfully");
             } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("User not found for deletion");
+                response.setStatusCode(404);
+                response.setMessage("User not found for deletion");
             }
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred while deleting user: " + e.getMessage());
+            response.setStatusCode(500);
+            response.setMessage("Error occurred while deleting user: " + e.getMessage());
         }
-        return reqRes;
+        return response;
     }
 
-    public ReqRes updateUser(Integer userId, OurUsers updatedUser) {
-        ReqRes reqRes = new ReqRes();
+    public UserRequestResponse updateUser(Integer userId, OurUser updatedUser) {
+        UserRequestResponse reqRes = new UserRequestResponse();
         try {
-            Optional<OurUsers> userOptional = usersRepo.findById(userId);
-            if (userOptional.isPresent()) {
-                OurUsers existingUser = userOptional.get();
+            Optional<OurUser> user = usersRepository.findById(userId);
+            if (user.isPresent()) {
+                OurUser existingUser = user.get();
                 existingUser.setEmail(updatedUser.getEmail());
                 existingUser.setName(updatedUser.getName());
-                existingUser.setCity(updatedUser.getCity());
                 existingUser.setRole(updatedUser.getRole());
 
                 // Check if password is present in the request
@@ -167,8 +167,8 @@ public class UserManagementService {
                     existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
                 }
 
-                OurUsers savedUser = usersRepo.save(existingUser);
-                reqRes.setOurUsers(savedUser);
+                OurUser savedUser = usersRepository.save(existingUser);
+                reqRes.setOurUser(savedUser);
                 reqRes.setStatusCode(200);
                 reqRes.setMessage("User updated successfully");
             } else {
@@ -183,24 +183,25 @@ public class UserManagementService {
     }
 
 
-    public ReqRes getMyInfo(String email){
-        ReqRes reqRes = new ReqRes();
+    public UserRequestResponse getMyInfo(String email){
+        UserRequestResponse response = new UserRequestResponse();
         try {
-            Optional<OurUsers> userOptional = usersRepo.findByEmail(email);
-            if (userOptional.isPresent()) {
-                reqRes.setOurUsers(userOptional.get());
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("successful");
+            Optional<OurUser> user = usersRepository.findByEmail(email);
+            if (user.isPresent()) {
+                response.setOurUser(user.get());
+                response.setStatusCode(200);
+                response.setMessage("successful");
             } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("User not found for update");
+                response.setStatusCode(404);
+                response.setMessage("User not found for update");
             }
 
         }catch (Exception e){
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred while getting user info: " + e.getMessage());
+            response.setStatusCode(500);
+            response.setMessage("Error occurred while getting user info: " + e.getMessage());
         }
-        return reqRes;
-
+        return response;
     }
 }
+
+
