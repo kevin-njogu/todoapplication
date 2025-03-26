@@ -18,9 +18,7 @@ import java.util.Arrays;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfigs {
-
     private final UserDetailsServiceImpl userDetailsServiceimpl;
-
     //Default implementation of AuthenticationManager as provided by spring boot
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
@@ -40,13 +38,6 @@ public class ApplicationConfigs {
     public PasswordEncoder passwordEncoder() {
         return  new BCryptPasswordEncoder();
     }
-
-    /**
-     * Bean for configuring CORS on the application. This is necessary for the React frontend to be able to make requests to the
-     * Spring Boot backend.
-     *
-     * @return A {@link UrlBasedCorsConfigurationSource} that enables CORS on all endpoints.
-     */
     @Bean
     UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

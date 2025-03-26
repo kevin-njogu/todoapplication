@@ -1,33 +1,33 @@
-package com.kevin.todo.todo_application.reconciler.reconciliation;
+package com.kevin.todo.todo_application.reconciler.reconciliation.controller;
 
-import com.kevin.todo.todo_application.reconciler.equitybank.model.EquityBankStatement;
-import com.kevin.todo.todo_application.reconciler.workpayequity.model.WorkpayEquityStatement;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import com.kevin.todo.todo_application.reconciler.reconciliation.dto.ReconcileRequestDto;
+import com.kevin.todo.todo_application.reconciler.reconciliation.dto.ReconcileResponseDto;
+import com.kevin.todo.todo_application.reconciler.reconciliation.service.ReconcilerServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/reconciler")
+@RequiredArgsConstructor
+@RequestMapping("/reconciliation")
 public class ReconcilerController {
-
-    private ReconcilerServiceImpl reconcilerService;
-
-    public ReconcilerController(ReconcilerServiceImpl reconcilerService) {
-        this.reconcilerService = reconcilerService;
+    private final ReconcilerServiceImpl reconcilerService;
+    @PostMapping("/reconcile")
+    public ResponseEntity<ReconcileResponseDto> reconcile(@RequestBody ReconcileRequestDto reconcileRequestDto) {
+        if (reconcileRequestDto == null) {
+            return ResponseEntity.badRequest().body(ReconcileResponseDto.builder().message("Reconcile request is null").build());
+        }
+        if ("equity".equals(reconcileRequestDto.getAccount())) {
+            return ResponseEntity.ok(reconcilerService.reconcileEquityPayments(reconcileRequestDto));
+        }
+        return ResponseEntity.badRequest().body(ReconcileResponseDto.builder().message("Account type not supported").build());
     }
+}
 
-   @GetMapping("/reconcile")
-    public ResponseEntity<String> reconcile() {
-        reconcilerService.reconcile();
-        return ResponseEntity.ok("Reconciliation process completed");
-    }
-
+    /*
     @GetMapping("/credits-equity-bank")
     public ResponseEntity<?> getAllCreditsInEquityBank() {
         return ResponseEntity.ok(reconcilerService.findAllEquityBankCredits());
@@ -37,7 +37,7 @@ public class ReconcilerController {
     @GetMapping("/charges-equity-bank")
     public ResponseEntity<?> getAllChargesInEquityBank() {
         return ResponseEntity.ok(reconcilerService.findAllEquityBankCharges());
-    }  */
+    }
 
     @GetMapping("/charges-equity-bank-page")
     public Page<EquityBankStatement> getAllChargesInEquityBank(
@@ -54,7 +54,7 @@ public class ReconcilerController {
     @GetMapping("/uncreconciled-equity-bank")
     public ResponseEntity<?> getAllUnreconciledInEquityBank() {
         return ResponseEntity.ok(reconcilerService.findUnreconciledEquityItems());
-    }*/
+    }
 
     @GetMapping("/uncreconciled-equity-bank-page")
     public Page<EquityBankStatement> getUnReconciledEquityItems(
@@ -71,7 +71,7 @@ public class ReconcilerController {
     @GetMapping("/reconciled-equity-bank")
     public ResponseEntity<?> getAllReconciledInEquityBank() {
         return ResponseEntity.ok(reconcilerService.findReconciledEquityItems());
-    }*/
+    }
 
     @GetMapping("/reconciled-equity-bank-page")
     public Page<EquityBankStatement> getReconciledEquityItems(
@@ -89,7 +89,7 @@ public class ReconcilerController {
     public ResponseEntity<?> getReconciledItemsInWorkpayEquity() {
         return ResponseEntity.ok(reconcilerService.findReconciledWorkpayEquityItems());
     }
-     */
+
 
     @GetMapping("/reconciled-workpay-equity-page")
     public Page<WorkpayEquityStatement> getReconciledItemsInWorkpayEquity(
@@ -107,7 +107,7 @@ public class ReconcilerController {
     public ResponseEntity<?> getUnreconciledItemsInWorkpayEquity() {
         return ResponseEntity.ok(reconcilerService.findUnReconciledWorkpayEquityItems());
     }
-     */
+
 
     @GetMapping("/unreconciled-workpay-equity-page")
     public Page<WorkpayEquityStatement>getUnreconciledItemsInWorkpayEquity(
@@ -118,6 +118,6 @@ public class ReconcilerController {
         Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         return reconcilerService.findUnReconciledWorkpayEquityItems(pageable);
-    }
+    }*/
 
-}
+

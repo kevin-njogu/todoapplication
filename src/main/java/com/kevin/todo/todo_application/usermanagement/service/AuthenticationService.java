@@ -16,17 +16,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-
     private static final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-
     public AuthenticationResponse register(RegisterRequest registerRequest) {
         var user = User.builder()
                 .name(registerRequest.getName())
@@ -42,7 +39,6 @@ public class AuthenticationService {
                 .role(savedUser.getRole().toString())
                 .build();
     }
-
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
         try {
             authenticationManager

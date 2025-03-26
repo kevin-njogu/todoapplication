@@ -16,20 +16,17 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
     private final UrlBasedCorsConfigurationSource corsConfigurationSource;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/auth/**","/swagger-ui/**","/v3/api-docs/**")
+                                .requestMatchers("/auth/**","/swagger-ui/**","/v3/api-docs/**","/uploader/**","/reconciliation/**")
                                 .permitAll()
                                 .requestMatchers("/admin/**")
                                 .hasAnyAuthority("ADMIN")
@@ -37,12 +34,11 @@ public class SecurityConfig {
                                 .authenticated()
                 )
                 .sessionManagement(
-                        sessionManagent-> sessionManagent
+                        sessionManagement-> sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 }

@@ -22,10 +22,8 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsServiceimpl;
-
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
@@ -33,19 +31,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
        final String userEmail;
         //1. Get the Authorization header
         final String authHeader = request.getHeader("Authorization");
-
         //2.check if the authorization header exists
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request,response);
             return;
         }
-
         //3.Extract token from the Authorization header from index 7(end of bearer)
         jwtToken = authHeader.substring(7);
-
         //4.Extract userEmail from the JWT token
         userEmail = jwtService.extractUsername(jwtToken);
-
         //5. Check if the userEmail exists and that the user is not already authenticated. If te authentication object is null it means the user is not already authenticated
         if(Objects.nonNull(userEmail) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
             UserDetails userDetails = userDetailsServiceimpl.loadUserByUsername(userEmail);

@@ -17,7 +17,7 @@ import java.util.function.Function;
 public class JwtService {
 
     private static final  String SECRET_KEY="e0b52ff24c699fafec3dc15665dad176f4308c4717bdcf3e030c5b39784ce669";
-    private static final long EXPIRATION_TIME = 3600000;
+    private static final long EXPIRATION_TIME = 1000 *60*60*24;
 
     //1.Method to Generate JWT token. Takes in a map of any custom or extra claims we want to add and a UserDetails object from spring security
     public String generateJwtToken(Map<String, Object> extraClaims, UserDetails userDetails) {
