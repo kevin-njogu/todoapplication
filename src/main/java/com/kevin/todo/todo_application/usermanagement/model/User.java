@@ -1,67 +1,91 @@
 package com.kevin.todo.todo_application.usermanagement.model;
 
-import com.kevin.todo.todo_application.usermanagement.commons.Role;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
-@Table(name = "_user")
-public class User implements UserDetails {
-
+@Table(name = "_user", uniqueConstraints = {@UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")})
+public class User {
     @Id
-    @GeneratedValue
-    private Integer id;
-    private  String name;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long userId;
+
+    @NotBlank
+    @Size(max = 30)
+    @Column(name = "username")
+    private String username;
+
+    @NotBlank
+    @Size(max = 50)
+    @Email
+    @Column(name = "email")
     private  String email;
+
+    @Size(max = 120)
+    @Column(name = "password")
+    @JsonIgnore
     private String password;
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    @JsonBackReference
+    @ToString.Exclude
+    private Roles role;
+
+    @CreationTimestamp
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
+
+    @UpdateTimestamp
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
+
+    private boolean accountNonLocked = true;
+    private boolean accountNonExpired = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enabled = true;
+
+    private LocalDate credentialsExpiryDate;
+    private LocalDate accountExpiryDate;
+
+    private String twoFactorSecret;
+    private boolean isTwoFactorEnabled = false;
+    private String signUpMethod;
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+    public User(String userName, String email) {
+        this.username = userName;
+        this.email = email;
     }
 
     @Override
-    public String getPassword(){
-        return  password;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        return userId != null && userId.equals(((User) o).getUserId());
     }
 
     @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
