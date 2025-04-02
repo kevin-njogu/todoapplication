@@ -2,21 +2,19 @@ package com.kevin.todo.todo_application.usermanagement.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kevin.todo.todo_application.usermanagement.model.User;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Service
-@Data
-@NoArgsConstructor
 public class UserDetailsImpl implements UserDetails {
+    @Serial
     private static final long serialVersionUID = 1L;
     private Long id;
     private String username;
@@ -26,13 +24,16 @@ public class UserDetailsImpl implements UserDetails {
     private boolean is2faEnabled;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String password,  boolean is2faEnabled, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String username, String email, String password, boolean is2faEnabled, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.is2faEnabled = is2faEnabled;
         this.authorities = authorities;
+    }
+
+    public UserDetailsImpl() {
     }
 
     public static UserDetailsImpl build(User user) {
@@ -101,5 +102,38 @@ public class UserDetailsImpl implements UserDetails {
             return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @JsonIgnore
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void set2faEnabled(boolean is2faEnabled) {
+        this.is2faEnabled = is2faEnabled;
+    }
+
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public String toString() {
+        return "UserDetailsImpl(id=" + this.getId() + ", username=" + this.getUsername() + ", email=" + this.getEmail() + ", password=" + this.getPassword() + ", is2faEnabled=" + this.is2faEnabled() + ", authorities=" + this.getAuthorities() + ")";
+    }
+
+    private boolean is2faEnabled() {
+            return this.is2faEnabled;
     }
 }

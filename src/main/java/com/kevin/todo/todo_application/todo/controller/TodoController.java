@@ -3,7 +3,6 @@ package com.kevin.todo.todo_application.todo.controller;
 import com.kevin.todo.todo_application.todo.dto.TodoDto;
 import com.kevin.todo.todo_application.todo.service.TodoService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,9 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/todos")
-@RequiredArgsConstructor
 public class TodoController {
     private final TodoService todoService;
+
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
+    }
+
     @GetMapping("/getalltodos")
     public ResponseEntity <TodoDto>  retrieveAllTodos(@AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();

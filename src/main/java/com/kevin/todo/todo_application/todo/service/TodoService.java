@@ -1,17 +1,20 @@
 package com.kevin.todo.todo_application.todo.service;
 
-import com.kevin.todo.todo_application.todo.repository.TodoRepository;
 import com.kevin.todo.todo_application.todo.dto.TodoDto;
 import com.kevin.todo.todo_application.todo.entity.Todo;
-import lombok.RequiredArgsConstructor;
+import com.kevin.todo.todo_application.todo.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class TodoService {
     private final TodoRepository todoRepository;
+
+    public TodoService(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
+
     public TodoDto findAll(String ownerUsername) {
         try{
         List<Todo> todos = todoRepository.findByOwnerUsername(ownerUsername);

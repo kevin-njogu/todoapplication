@@ -1,13 +1,8 @@
 package com.kevin.todo.todo_application.usermanagement.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDate;
 import java.util.List;
 
-@Setter
-@Getter
 public class UserInfoResponse {
     private Long id;
     private String username;
@@ -34,6 +29,94 @@ public class UserInfoResponse {
         this.credentialsExpiryDate = credentialsExpiryDate;
         this.accountExpiryDate = accountExpiryDate;
         this.isTwoFactorEnabled = isTwoFactorEnabled;
+        this.roles = roles;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public boolean isAccountNonLocked() {
+        return this.accountNonLocked;
+    }
+
+    public boolean isAccountNonExpired() {
+        return this.accountNonExpired;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return this.credentialsNonExpired;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public LocalDate getCredentialsExpiryDate() {
+        return this.credentialsExpiryDate;
+    }
+
+    public LocalDate getAccountExpiryDate() {
+        return this.accountExpiryDate;
+    }
+
+    public boolean isTwoFactorEnabled() {
+        return this.isTwoFactorEnabled;
+    }
+
+    public List<String> getRoles() {
+        return this.roles;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setCredentialsExpiryDate(LocalDate credentialsExpiryDate) {
+        this.credentialsExpiryDate = credentialsExpiryDate;
+    }
+
+    public void setAccountExpiryDate(LocalDate accountExpiryDate) {
+        this.accountExpiryDate = accountExpiryDate;
+    }
+
+    public void setTwoFactorEnabled(boolean isTwoFactorEnabled) {
+        this.isTwoFactorEnabled = isTwoFactorEnabled;
+    }
+
+    public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 }

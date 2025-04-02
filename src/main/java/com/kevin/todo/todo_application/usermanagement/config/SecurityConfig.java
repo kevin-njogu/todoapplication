@@ -19,11 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -40,7 +37,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                http.cors(withDefaults());
                 http.csrf(csrf ->
                         csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                                 .ignoringRequestMatchers("/api/auth/public/**")
@@ -53,8 +50,7 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 );
-                http.exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(unauthorizedHandler));
+                http.exceptionHandling(exception ->exception.authenticationEntryPoint(unauthorizedHandler));
                 http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
                 http.formLogin(withDefaults());
                 http.httpBasic(withDefaults());
@@ -76,6 +72,7 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
+    /*
     @Bean
     UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -85,7 +82,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
+    }*/
 
     @Bean
     public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {

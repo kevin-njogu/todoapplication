@@ -1,23 +1,26 @@
 package com.kevin.todo.todo_application.usermanagement.service;
 
-import com.kevin.todo.todo_application.usermanagement.model.Role;
 import com.kevin.todo.todo_application.usermanagement.dto.UserDto;
+import com.kevin.todo.todo_application.usermanagement.model.Role;
 import com.kevin.todo.todo_application.usermanagement.model.Roles;
 import com.kevin.todo.todo_application.usermanagement.model.User;
 import com.kevin.todo.todo_application.usermanagement.repository.RoleRepository;
 import com.kevin.todo.todo_application.usermanagement.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
 
     @Override
     public void updateUserRole(Long userId, String roleName) {
